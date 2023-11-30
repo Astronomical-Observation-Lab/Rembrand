@@ -207,48 +207,99 @@ Em_lines = CheckWavelengths("Ba_lines")
 print(Em_lines)
 
 # %%
-# plot data from all datasets
 
 #lines_of_interest = [6562.8518,4861.3615,4340.462]
 lines_of_interest = H_profile_lines
 
+# TVS
+
+S_ij = [data_vega_001[:,1], data_vega_002[:,1], data_vega_004[:,1], data_vega_005[:,1], data_vega_006[:,1]]
+N = len(S_ij)
+M = len(S_ij[0])
+
+# (4)
+s_j = []
+for j in range(M):
+    temp_s_j = 0
+    for i in range(N):
+        temp_s_j += (1/N) * S_ij[i][j]
+    s_j.append(temp_s_j)
+
+# (3)
+d_ij = []
+for i in range(N):
+    temp_d_j = []
+    for j in range(M):
+        temp_d_j.append(S_ij[i][j] - s_j[j])
+    d_ij.append(temp_d_j)
+
+# (5)
+TVS = []
+for j in range(M):
+    temp_TVS_j = 0
+    for i in range(N):
+        temp_TVS_j += 1/(N-1) * d_ij[i][j] * d_ij[i][j]
+    TVS.append(temp_TVS_j)
+
+#take root and percentage of flux
+for i in range(len(TVS)):
+    TVS[i] = TVS[i]**(1/2)
+np.multiply(TVS, 100)
+    
+plt.plot(data_vega_001[:,0], TVS)
+plt.title("TVS across the entire spectrum")
+plt.show()
 
 for i in range(len(lines_of_interest)):
-    #center_wl = int(lines_of_interest[i])
-    #data_sliced = data_vega[center_wl-300:center_wl+300]
+    plt.plot(data_vega_001[:,0], TVS)
+    plt.axvline(lines_of_interest[i], linestyle = '--', color = 'gray')
+    if i != 2:
+        plt.ylim(0,0.04)
+    plt.xlim(lines_of_interest[i] - 6, lines_of_interest[i] + 6)
+    plt.xlabel("Wavelength")
+    plt.ylabel("(TVS)^1/2 [%F]")
+    plt.title(f"TVS at {lines_of_interest[i]} A")
+    plt.show()
+
+
+#%%
+# plot data from all datasets
+
+for k in range(len(lines_of_interest)):
+
     z = 0.66
     z_1 = z * 3/100
     z_2 = z * 6/100
     z_3 = z * 22/100
     # 4, 7, 25
-    if i == 0:
+    if k == 0:
         plt.plot(data_vega_001[:,0], data_vega_001[:,1]+z_1*0, label="data 001")
         plt.plot(data_vega_002[:,0], data_vega_002[:,1]+z_1*1, label="data 002")
         #plt.plot(data_vega_003[:,0], data_vega_003[:,1]+z_1*2, label="data 003")
         plt.plot(data_vega_004[:,0], data_vega_004[:,1]+z_1*3, label="data 004")
         plt.plot(data_vega_005[:,0], data_vega_005[:,1]+z_1*4, label="data 005")
         plt.plot(data_vega_006[:,0], data_vega_006[:,1]+z_1*5, label="data 006")
-        plt.axvline(lines_of_interest[i], linestyle = '--', color = 'gray')
+        plt.axvline(lines_of_interest[k], linestyle = '--', color = 'gray')
         plt.ylim(0,3.25+z_1*5)
-    if i == 1:
+    if k == 1:
         plt.plot(data_vega_001[:,0], data_vega_001[:,1]+z_2*0, label="data 001")
         plt.plot(data_vega_002[:,0], data_vega_002[:,1]+z_2*1, label="data 002")
         #plt.plot(data_vega_003[:,0], data_vega_003[:,1]+z_2*2, label="data 003")
         plt.plot(data_vega_004[:,0], data_vega_004[:,1]+z_2*3, label="data 004")
         plt.plot(data_vega_005[:,0], data_vega_005[:,1]+z_2*4, label="data 005")
         plt.plot(data_vega_006[:,0], data_vega_006[:,1]+z_2*5, label="data 006")
-        plt.axvline(lines_of_interest[i], linestyle = '--', color = 'gray')
+        plt.axvline(lines_of_interest[k], linestyle = '--', color = 'gray')
         plt.ylim(0,6.25+z_2*5)
-    if i == 2:
+    if k == 2:
         plt.plot(data_vega_001[:,0], data_vega_001[:,1]+z_3*0, label="data 001")
         plt.plot(data_vega_002[:,0], data_vega_002[:,1]+z_3*1, label="data 002")
         #plt.plot(data_vega_003[:,0], data_vega_003[:,1]+z_3*2, label="data 003")
         plt.plot(data_vega_004[:,0], data_vega_004[:,1]+z_3*3, label="data 004")
         plt.plot(data_vega_005[:,0], data_vega_005[:,1]+z_3*4, label="data 005")
         plt.plot(data_vega_006[:,0], data_vega_006[:,1]+z_3*5, label="data 006")
-        plt.axvline(lines_of_interest[i], linestyle = '--', color = 'gray')
+        plt.axvline(lines_of_interest[k], linestyle = '--', color = 'gray')
         plt.ylim(0,22+z_3*5)
-    plt.xlim(lines_of_interest[i] - 6, lines_of_interest[i] + 6)
+    plt.xlim(lines_of_interest[k] - 6, lines_of_interest[k] + 6)
     plt.grid()
     plt.legend()
     plt.show()
