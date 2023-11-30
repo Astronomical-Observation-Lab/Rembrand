@@ -213,7 +213,7 @@ lines_of_interest = H_profile_lines
 
 # TVS
 
-S_ij = [data_vega_001[:,1], data_vega_002[:,1], data_vega_004[:,1], data_vega_005[:,1], data_vega_006[:,1]]
+S_ij = [data_vega_002[:,1], data_vega_004[:,1], data_vega_005[:,1], data_vega_006[:,1]]
 N = len(S_ij)
 M = len(S_ij[0])
 
@@ -266,42 +266,83 @@ for i in range(len(lines_of_interest)):
 # plot data from all datasets
 
 for k in range(len(lines_of_interest)):
-
+    
+    plot_range = 6
     z = 0.66
     z_1 = z * 3/100
     z_2 = z * 6/100
     z_3 = z * 22/100
     # 4, 7, 25
+
+
+    fig, (ax1, ax2) = plt.subplots(2,1, sharex=True, gridspec_kw={'height_ratios': [10, 2]})
+    fig.subplots_adjust(hspace=0.1)
+    
+    ax1.set_title(f"Normalized flux and TVS around {lines_of_interest[k]} A")
+
     if k == 0:
-        plt.plot(data_vega_001[:,0], data_vega_001[:,1]+z_1*0, label="data 001")
-        plt.plot(data_vega_002[:,0], data_vega_002[:,1]+z_1*1, label="data 002")
-        #plt.plot(data_vega_003[:,0], data_vega_003[:,1]+z_1*2, label="data 003")
-        plt.plot(data_vega_004[:,0], data_vega_004[:,1]+z_1*3, label="data 004")
-        plt.plot(data_vega_005[:,0], data_vega_005[:,1]+z_1*4, label="data 005")
-        plt.plot(data_vega_006[:,0], data_vega_006[:,1]+z_1*5, label="data 006")
-        plt.axvline(lines_of_interest[k], linestyle = '--', color = 'gray')
-        plt.ylim(0,3.25+z_1*5)
+        #ax1.plot(data_vega_001[:,0], data_vega_001[:,1]+z_1*0, label="data 001")
+        ax1.plot(data_vega_002[:,0], data_vega_002[:,1]+z_1*1, label="data 002")
+        #ax1.plot(data_vega_003[:,0], data_vega_003[:,1]+z_1*2, label="data 003")
+        ax1.plot(data_vega_004[:,0], data_vega_004[:,1]+z_1*3, label="data 004")
+        ax1.plot(data_vega_005[:,0], data_vega_005[:,1]+z_1*4, label="data 005")
+        ax1.plot(data_vega_006[:,0], data_vega_006[:,1]+z_1*5, label="data 006")
+        ax1.vlines(lines_of_interest[k], ymin=-1, ymax=3.25+z_1*5, linestyle = '--', color = 'gray')
+        ax1.set_ylim(0,3.25+z_1*5)
+        ax1.set_xlim(lines_of_interest[k] - plot_range, lines_of_interest[k] + plot_range)
+        ax1.set_ylabel(f"Flux + {round(z_1,2)} per dataset")
+        ax1.legend()
+        
+        ax2.plot(data_vega_001[:,0], TVS)
+        ax2.vlines(lines_of_interest[k], ymin=-1, ymax=1, linestyle = '--', color = 'gray')
+        ax2.set_ylim(0,0.042)
+        ax2.set_xlim(lines_of_interest[k] - plot_range, lines_of_interest[k] + plot_range)
+        ax2.set_xlabel("Wavelength")
+        ax2.set_ylabel("(TVS)^1/2 [%F]")
+        plt.savefig("H_gamma.png", dpi=200)
+        
     if k == 1:
-        plt.plot(data_vega_001[:,0], data_vega_001[:,1]+z_2*0, label="data 001")
-        plt.plot(data_vega_002[:,0], data_vega_002[:,1]+z_2*1, label="data 002")
-        #plt.plot(data_vega_003[:,0], data_vega_003[:,1]+z_2*2, label="data 003")
-        plt.plot(data_vega_004[:,0], data_vega_004[:,1]+z_2*3, label="data 004")
-        plt.plot(data_vega_005[:,0], data_vega_005[:,1]+z_2*4, label="data 005")
-        plt.plot(data_vega_006[:,0], data_vega_006[:,1]+z_2*5, label="data 006")
-        plt.axvline(lines_of_interest[k], linestyle = '--', color = 'gray')
-        plt.ylim(0,6.25+z_2*5)
+        #ax1.plot(data_vega_001[:,0], data_vega_001[:,1]+z_2*0, label="data 001")
+        ax1.plot(data_vega_002[:,0], data_vega_002[:,1]+z_2*1, label="data 002")
+        #ax1.plot(data_vega_003[:,0], data_vega_003[:,1]+z_2*2, label="data 003")
+        ax1.plot(data_vega_004[:,0], data_vega_004[:,1]+z_2*3, label="data 004")
+        ax1.plot(data_vega_005[:,0], data_vega_005[:,1]+z_2*4, label="data 005")
+        ax1.plot(data_vega_006[:,0], data_vega_006[:,1]+z_2*5, label="data 006")
+        ax1.vlines(lines_of_interest[k], ymin=-1, ymax=6.25+z_1*5, linestyle = '--', color = 'gray')
+        ax1.set_ylim(0,6.25+z_1*5)
+        ax1.set_xlim(lines_of_interest[k] - plot_range, lines_of_interest[k] + plot_range)
+        ax1.set_ylabel(f"Flux + {round(z_2,2)} per dataset")
+        ax1.legend()
+        
+        ax2.plot(data_vega_001[:,0], TVS)
+        ax2.vlines(lines_of_interest[k], ymin=-1, ymax=1, linestyle = '--', color = 'gray')
+        ax2.set_ylim(0,0.035)
+        ax2.set_xlim(lines_of_interest[k] - plot_range, lines_of_interest[k] + plot_range)
+        ax2.set_xlabel("Wavelength")
+        ax2.set_ylabel("(TVS)^1/2 [%F]")
+        plt.savefig("H_beta.png", dpi=200)
+        
     if k == 2:
-        plt.plot(data_vega_001[:,0], data_vega_001[:,1]+z_3*0, label="data 001")
-        plt.plot(data_vega_002[:,0], data_vega_002[:,1]+z_3*1, label="data 002")
-        #plt.plot(data_vega_003[:,0], data_vega_003[:,1]+z_3*2, label="data 003")
-        plt.plot(data_vega_004[:,0], data_vega_004[:,1]+z_3*3, label="data 004")
-        plt.plot(data_vega_005[:,0], data_vega_005[:,1]+z_3*4, label="data 005")
-        plt.plot(data_vega_006[:,0], data_vega_006[:,1]+z_3*5, label="data 006")
-        plt.axvline(lines_of_interest[k], linestyle = '--', color = 'gray')
-        plt.ylim(0,22+z_3*5)
-    plt.xlim(lines_of_interest[k] - 6, lines_of_interest[k] + 6)
-    plt.grid()
-    plt.legend()
+        #ax1.plot(data_vega_001[:,0], data_vega_001[:,1]+z_3*0, label="data 001")
+        ax1.plot(data_vega_002[:,0], data_vega_002[:,1]+z_3*1, label="data 002")
+        #ax1.plot(data_vega_003[:,0], data_vega_003[:,1]+z_3*2, label="data 003")
+        ax1.plot(data_vega_004[:,0], data_vega_004[:,1]+z_3*3, label="data 004")
+        ax1.plot(data_vega_005[:,0], data_vega_005[:,1]+z_3*4, label="data 005")
+        ax1.plot(data_vega_006[:,0], data_vega_006[:,1]+z_3*5, label="data 006")
+        ax1.vlines(lines_of_interest[k], ymin=-1, ymax=22+z_1*5, linestyle = '--', color = 'gray')
+        ax1.set_ylim(0,22+z_1*5)
+        ax1.set_xlim(lines_of_interest[k] - plot_range*2, lines_of_interest[k] + plot_range*2)
+        ax1.set_ylabel(f"Flux + {round(z_3,2)} per dataset")
+        ax1.legend()
+        
+        ax2.plot(data_vega_001[:,0], TVS)
+        ax2.vlines(lines_of_interest[k], ymin=-1, ymax=1, linestyle = '--', color = 'gray')
+        ax2.set_ylim(0,0.25)
+        ax2.set_xlim(lines_of_interest[k] - plot_range*2, lines_of_interest[k] + plot_range*2)
+        ax2.set_xlabel("Wavelength")
+        ax2.set_ylabel("(TVS)^1/2 [%F]")
+        plt.savefig("H_alpha.png", dpi=200)
+        
     plt.show()
 
     
